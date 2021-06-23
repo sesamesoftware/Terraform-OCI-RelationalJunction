@@ -2,43 +2,44 @@
 Git hub Repository for OCI modules used to build RJ Stack, includes ADB Systems, DBAS, OAC, Relational Junction, and VCN
  */
 module "source" {
-  source = "git::github.com/williamdubberley/Terrafom-Modules-OCI.git"
+  source = "git::github.com/sesamesoftware/Terraform-Modules-OCI.git"
 }
 /*
 Local Variables
  */
 locals {
-  public_subnet_id  = var.rj_vcn_use_existing ? var.rj_subnet_public_existing : module.vcn.public-subnetid
-  private_subnet_id = var.rj_vcn_use_existing ? var.rj_subnet_private_existing : module.vcn.private-subnetid
+  public_subnet_id  = var.vcn_use_existing ? var.subnet_public_existing : module.vcn.public-subnetid
+  private_subnet_id = var.vcn_use_existing ? var.subnet_private_existing : module.vcn.private-subnetid
   ssh_public_key    = file("${var.ssh_public_key_path}")
   private_key       = file("${var.ssh_private_key_path}")
 
 }
 /* Virtual Cloud Network  */
 module "vcn" {
-  source                        = "./.terraform/modules/source/networking"
-  compartment_ocid              = var.compartment_ocid
-  rj_subnet_public_displayname  = var.rj_subnet_public_displayname
-  rj_subnet_public_cidr         = var.rj_subnet_public_cidr
-  rj_subnet_private_displayname = var.rj_subnet_private_displayname
-  rj_subnet_private_cidr        = var.rj_subnet_private_cidr
-  rj_vcn_use_existing           = false
-  rj_pub_subnet_dns_label       = var.rj_pub_subnet_dns_label
-  rj_pvt_subnet_dns_label       = var.rj_pvt_subnet_dns_label
-  rj_IGW_displayname            = var.rj_IGW_displayname
-  rj_vcn_cider_block            = var.rj_vcn_cider_block
-  rj_pvt_sl_displayname         = var.rj_pvt_sl_displayname
-  rj_pub_sl_displayname         = var.rj_pub_sl_displayname
-  rj_pvt_rt_displayname         = var.rj_pvt_rt_displayname
-  rj_pub_rt_displayname         = var.rj_pub_rt_displayname
-  rj_vcn_dns_label              = var.rj_vcn_dns_label
-  rj_VCN_displayname            = var.rj_VCN_displayname
-  rj_nat_displayname            = var.rj_nat_displayname
+  source                     = "./.terraform/modules/source/networking"
+  compartment_ocid           = var.compartment_ocid
+  subnet_public_displayname  = var.subnet_public_displayname
+  subnet_public_cidr         = var.subnet_public_cidr
+  subnet_private_displayname = var.subnet_private_displayname
+  subnet_private_cidr        = var.subnet_private_cidr
+  vcn_use_existing           = false
+  pub_subnet_dns_label       = var.pub_subnet_dns_label
+  pvt_subnet_dns_label       = var.pvt_subnet_dns_label
+  IGW_displayname            = var.IGW_displayname
+  vcn_cider_block            = var.vcn_cider_block
+  pvt_sl_displayname         = var.pvt_sl_displayname
+  pub_sl_displayname         = var.pub_sl_displayname
+  pvt_rt_displayname         = var.pvt_rt_displayname
+  pub_rt_displayname         = var.pub_rt_displayname
+  vcn_dns_label              = var.vcn_dns_label
+  VCN_displayname            = var.VCN_displayname
+  nat_displayname            = var.nat_displayname
+
 }
 
-/* 
-Autonomous Data Wearhouse
-*/
+ 
+//Autonomous Data Wearhouse
+
 module "adw" {
   source                                       = "./.terraform/modules/source/Databases/ADW"
   autonomous_database_admin_password           = var.autonomous_database_admin_password
@@ -53,17 +54,45 @@ module "adw" {
   autonomous_database_is_auto_scaling_enabled  = var.autonomous_database_is_auto_scaling_enabled
   autonomous_database_license_model            = var.autonomous_database_license_model
   adw_enabled                                  = var.adw_enabled
-  walletPath                                   = "${path.module}/${var.autonomous_database_db_name}.zip"
+  walletPath                                   = "${var.walletPath}/${var.autonomous_database_db_name}.zip"
 }
-/* 
-Autonomous Data Wearhouse
-*/
-module "DBAS" {
-source                                       = "./modules/dbas"
+output "ADW_URL" {
+  description = "url to connect to ADW"
+  value       = var.adw_enabled ? module.adw.ADW_URL : null
 }
+
+
+// Database
 /*
-Relational Junction 
+module "DBAS" {
+  source                  = "./.terraform/modules/source/Databases/dbas"
+  depends_on              = [module.vcn]
+  compartment_ocid        = var.compartment_ocid
+  tenancy_ocid            = var.tenancy_ocid
+  ad_number               = var.ad_number
+  database_admin_password = var.database_admin_password
+  database_db_unique_name = var.database_db_unique_name
+  database_db_workload    = var.database_db_workload
+  database_pdb_name       = var.database_pdb_name
+  database_version        = var.database_version
+  database_shape          = var.database_shape
+  database_storage        = var.database_storage
+  database_edition        = var.database_edition
+  database_nodecount      = var.database_nodecount
+  subnet_id               = local.public_subnet_id
+  ssh_public_keys         = local.ssh_public_key
+  domain                  = module.vcn.Public_Subnet_Dns
+  database_display_name   = var.database_display_name
+  database_hostname       = var.database_hostname
+}
+output "dbConnectionString" {
+  description = "url to connect to Relational Junction"
+  value       = module.DBAS.dbConnectionString
+}
 */
+
+//Relational Junction 
+
 module "rj" {
   source           = "./.terraform/modules/source/relationalJunction"
   compartment_ocid = var.compartment_ocid
@@ -80,10 +109,14 @@ module "rj" {
   region           = var.region
   tenancy_ocid     = var.tenancy_ocid
 }
+output "RJ_URL" {
+  description = "url to connect to Relational Junction"
+  value       = module.rj.RJ_URL
+}
 
-/*
-Oracle Analytics Cloud
- */
+
+//Oracle Analytics Cloud
+/* 
 module "oac" {
   source             = "./.terraform/modules/source/oac"
   oac_enabled        = var.oac_enabled
@@ -96,3 +129,10 @@ module "oac" {
   oac_name           = var.oac_name
   oac_description    = var.oac_description
 }
+
+output "OAC_URL" {
+  description = "url to connect to OAC"
+  value       = var.oac_enabled ? module.oac.OAC_URL : null
+}
+
+*/

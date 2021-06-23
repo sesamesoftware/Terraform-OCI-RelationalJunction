@@ -1,44 +1,86 @@
 # config
-tenancy_ocid         = ""
-user_ocid            = ""
-fingerprint          = ""
-private_key_path     = "~/.oci/oci_api_key.pem"
-compartment_ocid = "o"
-region = ""
+tenancy_ocid     = "ocid1.tenancy.oc1.....sxkgmzou3cqjyvq"
+user_ocid        = "ocid1.user.oc1....33slnucatya"
+fingerprint      = "b2:87:13:05...:0e:3d:0a:44:71:d9:a3"
+private_key_path = "~/.oci/oci_api_key.pem"
+compartment_ocid = "ocid1.compartment.oc1..aaaa...vkd726l2pbey3vpqq"
+region           = "us-ashburn-1"
+ad_number             = 1
 
 #switches 
-oac_enabled=false
-adw_enabled =false
-rj_enabled =false
-dbas_enabled =false
+adw_enabled      = true
+rj_enabled       = true
+oac_enabled      = false
+dbas_enabled     = false
+vcn_use_existing = false
+
 
 # SSH Keys  
-ssh_public_key_path=""
-ssh_private_key_path=""
+ssh_public_key_path  = "~/.ssh/id_rsa.pub"
+ssh_private_key_path = "~/.ssh/id_rsa"
 
-
+# Virtual Cloud Network
+//if vcn_use_existing
+vcn_existing            = "{existing vcn OCID}"
+subnet_public_existing  = "{existing public subnet ocid}"
+subnet_private_existing = "{existing private subnet ocid}"
+//else create
+subnet_public_displayname  = "Relational Junction - Public"
+subnet_public_cidr         = "10.0.0.0/24"
+subnet_private_displayname = "Relational Junction - Private"
+subnet_private_cidr        = "10.0.1.0/24"
+pub_subnet_dns_label       = "rjpublic"
+pvt_subnet_dns_label       = "rjprivate"
+IGW_displayname            = "Relational Junction IGW"
+vcn_cider_block            = "10.0.0.0/16"
+pvt_sl_displayname         = "Relational Junction - Private SL"
+pub_sl_displayname         = "Relational Junction - Public SL"
+pvt_rt_displayname         = "Relational Junction - Private RT"
+pub_rt_displayname         = "Relational Junction - Public RT"
+vcn_dns_label              = "rjvcn"
+VCN_displayname            = "Relational Junction VCN"
+nat_displayname            = "Relational Junction NAT"
 
 # Autonomous Data Warehouse
-autonomous_database_admin_password=""
+autonomous_database_admin_password           = "{super secret Password}"
+autonomous_database_cpu_core_count           = "1"
+autonomous_database_db_name                  = "ADWDB"
+autonomous_database_display_name             = "My ADW DB"
+autonomous_database_db_version               = "19c"
+autonomous_database_is_auto_scaling_enabled  = "false"
+autonomous_database_data_storage_size_in_tbs = "1"
+autonomous_database_db_workload              = "DW"
+autonomous_database_license_model            = "BRING_YOUR_OWN_LICENSE"
+autonomous_database_data_safe_status         = "NOT_REGISTERED"
 
-##DBAS
-database_admin_password= ""
-database_db_unique_name = ""
-database_db_workload = "OLTP"
-database_pdb_name= "PDB1"
-database_version ="19.7.0.0"
-database_shape= "VM.Standard2.1"
-database_shape_prod= "VM.Standard2.2"
-database_storage= "256"
-database_edition="STANDARD_EDITION"//ENTERPRISE_EDITION
-database_nodecount = "1"
+# Relational Junction Server
+rj_instance_name      = "rjserver"
+rj_shape              = "VM.Standard2.4"
+tags                  = { environment = "poc" }
+rj_type               = "Relational Junction Standard"
+timeout               = "20m"
+compute_instance_user = "opc"
+walletPath            = "~/wallet"
 
-## OAC
-oac_name=""
-oac_description=""
-oac_capacity_type = "OLPU_COUNT"
-oac_capacity_value= 1
-oac_capacity_value_prod= 2
-oac_feature_set = "ENTERPRISE_ANALYTICS"//SELF_SERVICE_ANALYTICS
-oac_license_type = "LICENSE_INCLUDED"
-oac_idcs_token = ""
+# Database  
+database_admin_password = "MYdba_123#"
+database_db_unique_name = "DEVDB"
+database_display_name   = "Dev_Analytics_DB"
+database_db_workload    = "OLTP"
+database_pdb_name       = "PDB1"
+database_version        = "21.1.0.0"
+database_shape          = "VM.Standard2.1"
+database_storage        = "1024"
+database_edition        = "STANDARD_EDITION"
+database_nodecount      = "1"
+database_hostname       = "Analytics"
+
+# Oracle Analytics Cloud
+oac_name                = "TFtest"
+oac_description         = "this is a test"
+oac_capacity_type       = "OLPU_COUNT"
+oac_capacity_value      = 1
+oac_capacity_value_prod = 2
+oac_feature_set         = "ENTERPRISE_ANALYTICS"
+oac_license_type        = "LICENSE_INCLUDED"
+oac_idcs_token          = "{eyJ4NXQjUzI1NiI6Ikk1...wP5h4jEeAothw}"
