@@ -62,7 +62,7 @@ timeout               = "20m"
 compute_instance_user = "opc"
 walletPath            = "~/wallet"
 
-# Database
+# Database  
 database_admin_password = "MYdba_123#"
 database_db_unique_name = "DEVDB"
 database_display_name   = "Dev_Analytics_DB"
