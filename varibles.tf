@@ -9,13 +9,16 @@ variable "region" {}
 # switces
 variable "vcn_use_existing" {}
 variable "adw_enabled" {}
+variable "atp_enabled" {}
+variable "ajd_enabled" {}
 variable "rj_enabled" {}
 variable "oac_enabled" {}
+variable "obs_enabled" {}
 variable "dbas_enabled" {}
 
 # SSH Keys
-variable "ssh_public_key_path" {}
-variable "ssh_private_key_path" {}
+variable "ssh_public_key" {}
+variable "ssh_private_key" {}
 
 # Virtual Cloud Network
 variable "vcn_existing" {}
@@ -45,7 +48,6 @@ variable "autonomous_database_display_name" {}
 variable "autonomous_database_db_version" {}
 variable "autonomous_database_is_auto_scaling_enabled" {}
 variable "autonomous_database_data_storage_size_in_tbs" {}
-variable "autonomous_database_db_workload" {}
 variable "autonomous_database_license_model" {}
 variable "autonomous_database_data_safe_status" {}
 
@@ -81,3 +83,8 @@ variable "oac_capacity_value_prod" {}
 variable "oac_feature_set" {}
 variable "oac_license_type" {}
 variable "oac_idcs_token" {}
+
+#Object Storage
+variable "obs_name" {}
+variable "namespace" {}
+variable "bucket_access_type" {}
