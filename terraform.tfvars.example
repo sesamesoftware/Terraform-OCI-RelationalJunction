@@ -1,23 +1,20 @@
 # config
-tenancy_ocid     = "ocid1.tenancy.oc1.....sxkgmzou3cqjyvq"
-user_ocid        = "ocid1.user.oc1....33slnucatya"
-fingerprint      = "b2:87:13:05...:0e:3d:0a:44:71:d9:a3"
-private_key_path = "~/.oci/oci_api_key.pem"
-compartment_ocid = "ocid1.compartment.oc1..aaaa...vkd726l2pbey3vpqq"
-region           = "us-ashburn-1"
-ad_number             = 1
+ad_number        = 1
+namespace        = ""
 
 #switches 
-adw_enabled      = true
-rj_enabled       = true
+adw_enabled      = false
+atp_enabled      = false
+ajd_enabled      = false
+rj_enabled       = false
 oac_enabled      = false
 dbas_enabled     = false
 vcn_use_existing = false
-
+obs_enabled      = false
 
 # SSH Keys  
-ssh_public_key_path  = "~/.ssh/id_rsa.pub"
-ssh_private_key_path = "~/.ssh/id_rsa"
+ssh_public_key  = ""
+ssh_private_key = ""
 
 # Virtual Cloud Network
 //if vcn_use_existing
@@ -42,14 +39,13 @@ VCN_displayname            = "Relational Junction VCN"
 nat_displayname            = "Relational Junction NAT"
 
 # Autonomous Data Warehouse
-autonomous_database_admin_password           = "{super secret Password}"
+autonomous_database_admin_password           = "{SuperSecretPassword}"
 autonomous_database_cpu_core_count           = "1"
 autonomous_database_db_name                  = "ADWDB"
 autonomous_database_display_name             = "My ADW DB"
 autonomous_database_db_version               = "19c"
 autonomous_database_is_auto_scaling_enabled  = "false"
 autonomous_database_data_storage_size_in_tbs = "1"
-autonomous_database_db_workload              = "DW"
 autonomous_database_license_model            = "BRING_YOUR_OWN_LICENSE"
 autonomous_database_data_safe_status         = "NOT_REGISTERED"
 
@@ -62,8 +58,8 @@ timeout               = "20m"
 compute_instance_user = "opc"
 walletPath            = "~/wallet"
 
-# Database  
-database_admin_password = "MYdba_123#"
+# Database
+database_admin_password = "{SuperSecretPassword}"
 database_db_unique_name = "DEVDB"
 database_display_name   = "Dev_Analytics_DB"
 database_db_workload    = "OLTP"
@@ -83,4 +79,8 @@ oac_capacity_value      = 1
 oac_capacity_value_prod = 2
 oac_feature_set         = "ENTERPRISE_ANALYTICS"
 oac_license_type        = "LICENSE_INCLUDED"
-oac_idcs_token          = "{eyJ4NXQjUzI1NiI6Ikk1...wP5h4jEeAothw}"
+oac_idcs_token          = "eyJ4NXQjUz...p_wP5h4jEeAothw"
+
+#Object Storage
+obs_name           = "RJ OBS Target"
+bucket_access_type = "NoPublicAccess"
