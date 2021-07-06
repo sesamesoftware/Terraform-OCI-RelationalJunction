@@ -1,9 +1,3 @@
-/* 
-Git hub Repository for OCI modules used to build RJ Stack, includes ADB Systems, DBAS, OAC, Relational Junction, and VCN
- */
-module "source" {
-  source = "git::github.com/sesamesoftware/Terraform-Modules-OCI.git"
-}
 /*
 Local Variables
  */
@@ -13,7 +7,7 @@ locals {
   }
 /* Virtual Cloud Network  */
 module "vcn" {
-  source                     = "./.terraform/modules/source/networking"
+  source                     = "./modules/networking"
   compartment_ocid           = var.compartment_ocid
   subnet_public_displayname  = var.subnet_public_displayname
   subnet_public_cidr         = var.subnet_public_cidr
@@ -38,65 +32,59 @@ module "vcn" {
 //Autonomous Data Wearhouse
 
 module "adw" {
-  source                                       = "./.terraform/modules/source/Databases/ADb"
+  source                                       = "./modules/Databases/ADb"
   count                                        = var.adw_enabled == true ? 1 : 0
-  autonomous_database_admin_password           = var.autonomous_database_admin_password
+  autonomous_database_admin_password           = var.ADW_autonomous_database_admin_password
   compartment_ocid                             = var.compartment_ocid
-  autonomous_database_cpu_core_count           = var.autonomous_database_cpu_core_count
-  autonomous_database_data_storage_size_in_tbs = var.autonomous_database_data_storage_size_in_tbs
-  autonomous_database_db_name                  = var.autonomous_database_db_name
-  autonomous_database_db_version               = var.autonomous_database_db_version
-  autonomous_database_data_safe_status         = var.autonomous_database_data_safe_status
+  autonomous_database_cpu_core_count           = var.ADW_autonomous_database_cpu_core_count
+  autonomous_database_data_storage_size_in_tbs = var.ADW_autonomous_database_data_storage_size_in_tbs
+  autonomous_database_db_name                  = var.ADW_autonomous_database_db_name
+  autonomous_database_db_version               = var.ADW_autonomous_database_db_version
+  autonomous_database_data_safe_status         = var.ADW_autonomous_database_data_safe_status
   autonomous_database_db_workload              = "DW"
-  autonomous_database_display_name             = var.autonomous_database_display_name
-  autonomous_database_is_auto_scaling_enabled  = var.autonomous_database_is_auto_scaling_enabled
-  autonomous_database_license_model            = var.autonomous_database_license_model
-  adw_enabled                                  = var.adw_enabled
-  walletPath                                   = "${var.walletPath}/${var.autonomous_database_db_name}.zip"
+  autonomous_database_display_name             = var.ADW_autonomous_database_display_name
+  autonomous_database_is_auto_scaling_enabled  = var.ADW_autonomous_database_is_auto_scaling_enabled
+  autonomous_database_license_model            = var.ADW_autonomous_database_license_model
 }
 
 //Autonomous Transactin Procesing
 
 module "atp" {
-  source                                       = "./.terraform/modules/source/Databases/ADb"
+  source                                       = "./modules/Databases/ADb"
   count                                        = var.atp_enabled == true ? 1 : 0
-  autonomous_database_admin_password           = var.autonomous_database_admin_password
+  autonomous_database_admin_password           = var.ATP_autonomous_database_admin_password
   compartment_ocid                             = var.compartment_ocid
-  autonomous_database_cpu_core_count           = var.autonomous_database_cpu_core_count
-  autonomous_database_data_storage_size_in_tbs = var.autonomous_database_data_storage_size_in_tbs
-  autonomous_database_db_name                  = var.autonomous_database_db_name
-  autonomous_database_db_version               = var.autonomous_database_db_version
-  autonomous_database_data_safe_status         = var.autonomous_database_data_safe_status
+  autonomous_database_cpu_core_count           = var.ATP_autonomous_database_cpu_core_count
+  autonomous_database_data_storage_size_in_tbs = var.ATP_autonomous_database_data_storage_size_in_tbs
+  autonomous_database_db_name                  = var.ATP_autonomous_database_db_name
+  autonomous_database_db_version               = var.ATP_autonomous_database_db_version
+  autonomous_database_data_safe_status         = var.ATP_autonomous_database_data_safe_status
   autonomous_database_db_workload              = "OLTP"
-  autonomous_database_display_name             = var.autonomous_database_display_name
-  autonomous_database_is_auto_scaling_enabled  = var.autonomous_database_is_auto_scaling_enabled
-  autonomous_database_license_model            = var.autonomous_database_license_model
-  adw_enabled                                  = var.adw_enabled
-  walletPath                                   = "${var.walletPath}/${var.autonomous_database_db_name}.zip"
+  autonomous_database_display_name             = var.ATP_autonomous_database_display_name
+  autonomous_database_is_auto_scaling_enabled  = var.ATP_autonomous_database_is_auto_scaling_enabled
+  autonomous_database_license_model            = var.ATP_autonomous_database_license_model
 }
 //Autonomous JSON Database
 
 module "ajd" {
-  source                                       = "./.terraform/modules/source/Databases/ADb"
+  source                                       = "./modules/Databases/ADb"
   count                                        = var.ajd_enabled == true ? 1 : 0
-  autonomous_database_admin_password           = var.autonomous_database_admin_password
+  autonomous_database_admin_password           = var.AJD_autonomous_database_admin_password
   compartment_ocid                             = var.compartment_ocid
-  autonomous_database_cpu_core_count           = var.autonomous_database_cpu_core_count
-  autonomous_database_data_storage_size_in_tbs = var.autonomous_database_data_storage_size_in_tbs
-  autonomous_database_db_name                  = var.autonomous_database_db_name
-  autonomous_database_db_version               = var.autonomous_database_db_version
-  autonomous_database_data_safe_status         = var.autonomous_database_data_safe_status
+  autonomous_database_cpu_core_count           = var.AJD_autonomous_database_cpu_core_count
+  autonomous_database_data_storage_size_in_tbs = var.AJD_autonomous_database_data_storage_size_in_tbs
+  autonomous_database_db_name                  = var.AJD_autonomous_database_db_name
+  autonomous_database_db_version               = var.AJD_autonomous_database_db_version
+  autonomous_database_data_safe_status         = var.AJD_autonomous_database_data_safe_status
   autonomous_database_db_workload              = "AJD"
-  autonomous_database_display_name             = var.autonomous_database_display_name
-  autonomous_database_is_auto_scaling_enabled  = var.autonomous_database_is_auto_scaling_enabled
-  autonomous_database_license_model            = var.autonomous_database_license_model
-  adw_enabled                                  = var.adw_enabled
-  walletPath                                   = "${var.walletPath}/${var.autonomous_database_db_name}.zip"
+  autonomous_database_display_name             = var.AJD_autonomous_database_display_name
+  autonomous_database_is_auto_scaling_enabled  = var.AJD_autonomous_database_is_auto_scaling_enabled
+  autonomous_database_license_model            = "LICENSE_INCLUDED"
 }
 // Database
 
 module "DBAS" {
-  source                  = "./.terraform/modules/source/Databases/dbas"
+  source                  = "./modules/Databases/dbas"
   count                   = var.dbas_enabled == true ? 1 : 0
   depends_on              = [module.vcn]
   compartment_ocid        = var.compartment_ocid
@@ -122,8 +110,7 @@ module "DBAS" {
 //Relational Junction 
 
 module "rj" {
-  source           = "./.terraform/modules/source/relationalJunction"
-  count            = var.rj_enabled == true ? 1 : 0
+  source           = "./modules/relationalJunction"
   compartment_ocid = var.compartment_ocid
   depends_on       = [module.vcn, module.adw]
   rj_shape         = var.rj_shape
@@ -131,12 +118,9 @@ module "rj" {
   tags             = var.tags
   subnet_id        = local.public_subnet_id
   ssh_public_key   = var.ssh_public_key
-  ssh_private_key  = var.ssh_private_key
-  walletPath       = "${path.module}/"
-  walletName       = "${var.autonomous_database_db_name}.zip"
-  dbname           = var.autonomous_database_db_name
   region           = var.region
   tenancy_ocid     = var.tenancy_ocid
+  instance_shape_config_memory_in_gbs=var.instance_shape_config_memory_in_gbs
 }
 
 
@@ -144,7 +128,7 @@ module "rj" {
 //Oracle Analytics Cloud
 
 module "oac" {
-  source             = "./.terraform/modules/source/oac"
+  source             = "./modules/oac"
   count              = var.oac_enabled == true ? 1 : 0
   oac_enabled        = var.oac_enabled
   oac_capacity_type  = var.oac_capacity_type
@@ -157,9 +141,8 @@ module "oac" {
   oac_description    = var.oac_description
 }
 
-
 module "OBS" {
-  source             = "./.terraform/modules/source/ObjectStorage"
+  source             = "./modules/ObjectStorage"
   count              = var.obs_enabled == true ? 1 : 0
   obs_name           = var.obs_name
   namespace          = var.namespace

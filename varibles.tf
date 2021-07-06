@@ -11,14 +11,12 @@ variable "vcn_use_existing" {}
 variable "adw_enabled" {}
 variable "atp_enabled" {}
 variable "ajd_enabled" {}
-variable "rj_enabled" {}
 variable "oac_enabled" {}
 variable "obs_enabled" {}
 variable "dbas_enabled" {}
 
 # SSH Keys
 variable "ssh_public_key" {}
-variable "ssh_private_key" {}
 
 # Virtual Cloud Network
 variable "vcn_existing" {}
@@ -41,25 +39,44 @@ variable "VCN_displayname" {}
 variable "nat_displayname" {}
 
 # Autonomous Data Warehouse
-variable "autonomous_database_cpu_core_count" {}
-variable "autonomous_database_admin_password" {}
-variable "autonomous_database_db_name" {}
-variable "autonomous_database_display_name" {}
-variable "autonomous_database_db_version" {}
-variable "autonomous_database_is_auto_scaling_enabled" {}
-variable "autonomous_database_data_storage_size_in_tbs" {}
-variable "autonomous_database_license_model" {}
-variable "autonomous_database_data_safe_status" {}
+variable "ADW_autonomous_database_cpu_core_count" {}
+variable "ADW_autonomous_database_admin_password" {}
+variable "ADW_autonomous_database_db_name" {}
+variable "ADW_autonomous_database_display_name" {}
+variable "ADW_autonomous_database_db_version" {}
+variable "ADW_autonomous_database_is_auto_scaling_enabled" {}
+variable "ADW_autonomous_database_data_storage_size_in_tbs" {}
+variable "ADW_autonomous_database_license_model" {}
+variable "ADW_autonomous_database_data_safe_status" {}
+
+# Autonomous Data Warehouse
+variable "ATP_autonomous_database_cpu_core_count" {}
+variable "ATP_autonomous_database_admin_password" {}
+variable "ATP_autonomous_database_db_name" {}
+variable "ATP_autonomous_database_display_name" {}
+variable "ATP_autonomous_database_db_version" {}
+variable "ATP_autonomous_database_is_auto_scaling_enabled" {}
+variable "ATP_autonomous_database_data_storage_size_in_tbs" {}
+variable "ATP_autonomous_database_license_model" {}
+variable "ATP_autonomous_database_data_safe_status" {}
+
+# Autonomous Data Warehouse
+variable "AJD_autonomous_database_cpu_core_count" {}
+variable "AJD_autonomous_database_admin_password" {}
+variable "AJD_autonomous_database_db_name" {}
+variable "AJD_autonomous_database_display_name" {}
+variable "AJD_autonomous_database_db_version" {}
+variable "AJD_autonomous_database_is_auto_scaling_enabled" {}
+variable "AJD_autonomous_database_data_storage_size_in_tbs" {}
+variable "AJD_autonomous_database_data_safe_status" {}
 
 # Relational Junction Server
 variable "rj_instance_name" {}
 variable "rj_shape" {}
 variable "rj_type" {}
-variable "timeout" {}
-variable "compute_instance_user" {}
 variable "ad_number" {}
 variable "tags" {}
-variable "walletPath" {}
+variable "instance_shape_config_memory_in_gbs"{}
 
 # Database
 variable "database_admin_password" {}

@@ -54,9 +54,7 @@ rj_instance_name      = "rjserver"
 rj_shape              = "VM.Standard2.4"
 tags                  = { environment = "poc" }
 rj_type               = "Relational Junction Standard"
-timeout               = "20m"
-compute_instance_user = "opc"
-walletPath            = "~/wallet"
+instance_shape_config_memory_in_gbs            = "200"
 
 # Database
 database_admin_password = "{SuperSecretPassword}"

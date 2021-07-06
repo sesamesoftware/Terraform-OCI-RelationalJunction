@@ -5,7 +5,7 @@ output "OAC_URL" {
 
 output "RJ_URL" {
   description = "url to connect to Relational Junction"
-  value       = var.rj_enabled ? module.rj[0].RJ_URL : null
+  value       = module.rj.RJ_URL
 }
 
 output "dbConnectionString" {

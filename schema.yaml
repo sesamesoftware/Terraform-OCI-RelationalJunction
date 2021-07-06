@@ -1,0 +1,712 @@
+# Title shown in Application Information tab.
+title: "RJ ADB OAC Stack"
+# Sub Title shown in Application Information tab.
+description: "Used to Build a Replication Stack to bring Data into the Oracle ecosystem"
+schemaVersion: 1.1.0
+version: "1.0"
+locale: "en"
+variableGroups:
+  - title: "Hidden"
+    variables:
+      - compartment_ocid
+      - tenancy_ocid
+      - user_ocid
+      - region
+      - fingerprint
+      - private_key_path
+    visible: false
+  - title: "Provision in"
+    variables:
+      - ${region}
+      - ${compartment_ocid}
+    visible: false
+  - title: "Infrastructure Options"
+    variables:
+      - ${adw_enabled}
+      - ${atp_enabled}
+      - ${ajd_enabled}
+      - ${oac_enabled}
+      - ${dbas_enabled}
+      - ${obs_enabled}
+  - title: "Relational Junction Configuration"
+    variables:
+      - ${rj_instance_name}
+      - ${rj_shape}
+      - ${rj_type}
+      - ${tags}
+      - ${ssh_public_key}
+      - ${ad_number}
+      - ${instance_shape_config_memory_in_gbs}
+  - title: "Virtual Cloud Network Configuration"
+    variables:
+      - ${vcn_use_existing}
+      - ${vcn_existing}
+      - ${VCN_displayname}
+      - ${vcn_dns_label}
+      - ${vcn_cider_block}
+      - ${subnet_public_existing}
+      - ${subnet_public_displayname}
+      - ${subnet_public_cidr}
+      - ${subnet_private_existing}
+      - ${subnet_private_displayname}
+      - ${subnet_private_cidr}
+      - ${pub_subnet_dns_label}
+      - ${pvt_subnet_dns_label}
+      - ${IGW_displayname}
+      - ${pvt_sl_displayname}
+      - ${pub_sl_displayname}
+      - ${pvt_rt_displayname}
+      - ${pub_rt_displayname}
+      - ${nat_displayname}
+  - title: "Autonomous Database Warehouse Configuration"
+    variables:
+      - ${ADW_autonomous_database_cpu_core_count}
+      - ${ADW_autonomous_database_admin_password}
+      - ${ADW_autonomous_database_db_name}
+      - ${ADW_autonomous_database_display_name}
+      - ${ADW_autonomous_database_db_version}
+      - ${ADW_autonomous_database_is_auto_scaling_enabled}
+      - ${ADW_autonomous_database_data_storage_size_in_tbs}
+      - ${ADW_autonomous_database_license_model}
+      - ${ADW_autonomous_database_data_safe_status}
+  - title: "Autonomous Transaction Processing Configuration"
+    variables:
+      - ${ATP_autonomous_database_cpu_core_count}
+      - ${ATP_autonomous_database_admin_password}
+      - ${ATP_autonomous_database_db_name}
+      - ${ATP_autonomous_database_display_name}
+      - ${ATP_autonomous_database_db_version}
+      - ${ATP_autonomous_database_is_auto_scaling_enabled}
+      - ${ATP_autonomous_database_data_storage_size_in_tbs}
+      - ${ATP_autonomous_database_license_model}
+      - ${ATP_autonomous_database_data_safe_status}
+  - title: "Autonomous JSON Database Configuration"
+    variables:
+      - ${AJD_autonomous_database_cpu_core_count}
+      - ${AJD_autonomous_database_admin_password}
+      - ${AJD_autonomous_database_db_name}
+      - ${AJD_autonomous_database_display_name}
+      - ${AJD_autonomous_database_db_version}
+      - ${AJD_autonomous_database_is_auto_scaling_enabled}
+      - ${AJD_autonomous_database_data_storage_size_in_tbs}
+      - ${AJD_autonomous_database_data_safe_status}
+  - title: "Database Systems Configuration"
+    variables:
+      - ${database_admin_password}
+      - ${database_db_unique_name}
+      - ${database_db_workload}
+      - ${database_pdb_name}
+      - ${database_version}
+      - ${database_shape}
+      - ${database_storage}
+      - ${database_edition}
+      - ${database_nodecount}
+      - ${database_display_name}
+      - ${database_hostname}
+  - title: "Object Storage Configuration"
+    variables:
+      - ${obs_name}
+      - ${namespace}
+      - ${bucket_access_type}
+  - title: "Oracle Analytics Cloud Configuration"
+    variables:
+      - ${oac_capacity_type}
+      - ${oac_capacity_value}
+      - ${oac_feature_set}
+      - ${oac_license_type}
+      - ${oac_name}
+      - ${oac_idcs_token}
+
+variables:
+  region:
+    type: oci:identity:region:name
+    required: true
+    visible: true
+  compartment_ocid:
+    type: oci:identity:compartment:id
+    required: true
+    title: "Compartment"
+    description: "The compartment in which to create compute instance(s) and ATP."
+  tenancy_ocid:
+    type: string
+    required: true
+    visible: false
+
+  adw_enabled:
+    type: boolean
+    title: "Create Autonomous Database Warehouse?"
+    default: true
+  atp_enabled:
+    type: boolean
+    title: "Create Autonomous Transaction Processing?"
+    default: false
+  ajd_enabled:
+    type: boolean
+    title: "Create Autonomous JSON Database?"
+    default: false
+  oac_enabled:
+    type: boolean
+    title: "Create Oracle Analytics Cloud?"
+    default: false
+  dbas_enabled:
+    type: boolean
+    title: "Create Database System?"
+    default: false
+  obs_enabled:
+    type: boolean
+    title: "Create Object Storage Bucket?"
+    default: false
+
+  rj_shape:
+    type: enum
+    enum:
+      - VM.Standard2.4
+      - VM.Standard2.8
+      - VM.Standard2.16
+      - VM.Standard2.24
+    title: "RJ Compute Shape"
+    required: true
+    default: "VM.Standard2.4"
+  rj_instance_name:
+    type: string
+    title: "Server Name"
+    required: true
+    default: "Relational Junction"
+  ssh_public_key:
+    type: oci:core:ssh:publickey
+    title: "Public SSH Key"
+    required: true
+    default: ""
+    pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 
+AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 
+AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 
+AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 
+AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)
+(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 
+AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 
+AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 
+AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
+  rj_type:
+    type: enum
+    title: "RJ License Types"
+    default: "Relational Junction Standard"
+    description: "License Type depends on the number of Junctions you will need (MS SQL Server,ADW,CSV,JSON,Netsuite,Salesforce,etc) Standard is 4 and under Enterprise is 5 and above"
+    required: true
+    enum:
+      - Relational Junction Standard
+      - Relational Junction Enterprise
+      - Relational Junction BYOL
+  ad_number:
+    type: Number 
+    title: "Availability Domain Number"
+    required: true
+    default: 1
+  tags:
+    type: Number 
+    title: "Availability Domain Number"
+    required: true
+    default: 1
+  instance_shape_config_memory_in_gbs:
+    type: integer
+    minimum: 1
+    maximum: 1024
+    title: "Amount of memory (GB)"
+    description: "You can customize the amount of memory allocated."
+    required: true
+    visible: true
+    default: 200
+  vcn_use_existing:
+    type: boolean
+    title: "Use Existing VCN?"
+    required: true
+    default: false
+  vcn_existing:
+    type: oci:core:vcn:id
+    title: "Select VCN"
+    required: ${vcn_use_existing}
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: ${vcn_use_existing}
+  subnet_public_existing:
+    type: oci:core:subnet:id
+    title: "Select Your Public VCN"
+    description: "This subnet hosts the API Gateway"
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${rj_vcn_existing}
+      hidePrivateSubnet: true
+    required: ${vcn_use_existing}
+    visible: ${vcn_use_existing}
+  subnet_private_existing:
+    type: oci:core:subnet:id
+    title: "Select Your Private VCN"
+    description: "This subnet hosts the project, notebooks and Functions application."
+    required: ${vcn_use_existing}
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${rj_vcn_existing}
+      hidePublicSubnet: true
+    visible: ${vcn_use_existing}
+  VCN_displayname:
+    type: string
+    title: "Display Name"
+    required: true
+    default: "Relational Junction VCN"
+    visible:
+      not:
+        - ${vcn_use_existing}
+  vcn_dns_label:
+    type: string
+    title: "DNS Label"
+    required: true
+    default: "rjvcn"
+    visible:
+      not:
+        - ${vcn_use_existing}
+  vcn_cider_block:
+    type: string
+    title: "CIDR Block"
+    required: true
+    default: "10.0.0.0/16"
+    visible:
+      not:
+        - ${vcn_use_existing}
+  subnet_public_displayname:
+    type: string
+    title: "Public Subnet Name"
+    description: "This subnet hosts the API Gateway"
+    required: true
+    default: "Relational Junction - Public"
+    visible:
+      not:
+        - ${vcn_use_existing}
+  subnet_public_cidr:
+    type: string
+    title: "Public Subnet CIDR Space"
+    required: true
+    default: "10.0.0.0/24"
+    visible:
+      not:
+        - ${vcn_use_existing}
+  subnet_private_displayname:
+    type: string
+    title: "Private Subnet Name"
+    description: "This subnet hosts the project, notebooks and Functions application."
+    required: true
+    default: "Relational Junction - Private"
+    visible:
+      not:
+        - ${vcn_use_existing}
+  subnet_private_cidr:
+    type: string
+    title: "Private Subnet CIDR "
+    required: true
+    default: "10.0.1.0/24"
+    visible:
+      not:
+        - ${vcn_use_existing}
+  pub_subnet_dns_label:
+    type: string
+    title: "Public DNS Label"
+    required: true
+    default: "rjpublic"
+    visible:
+      not:
+        - ${vcn_use_existing}
+  pvt_subnet_dns_label:
+    type: string
+    title: "Private DNS Label"
+    required: true
+    default: "rjprivate"
+    visible:
+      not:
+        - ${vcn_use_existing}
+  IGW_displayname:
+    type: string
+    title: "Internet Gateway Name"
+    required: true
+    default: "Relational Junction IGW"
+    visible:
+      not:
+        - ${vcn_use_existing}
+  pvt_sl_displayname:
+    type: string
+    title: "Private Security List Name"
+    required: true
+    default: "Relational Junction - Private SL"
+    visible:
+      not:
+        - ${vcn_use_existing}
+  pub_sl_displayname:
+    type: string
+    title: "public Security List Name"
+    required: true
+    default: "10.0.1.0/24"
+    visible:
+      not:
+        - ${vcn_use_existing}
+  pvt_rt_displayname:
+    type: string
+    title: "Private Route Name"
+    required: true
+    default: "Relational Junction - Private RT"
+    visible:
+      not:
+        - ${vcn_use_existing}
+  pub_rt_displayname:
+    type: string
+    title: "Private Route Name"
+    required: true
+    default: "Relational Junction - Public RT"
+    visible:
+      not:
+        - ${vcn_use_existing}
+  nat_displayname:
+    type: string
+    title: "Nat Gateway Name"
+    required: true
+    default: "Relational Junction NAT"
+    visible:
+      not:
+        - ${vcn_use_existing}
+ 
+  ADW_autonomous_database_cpu_core_count:
+    type: integer
+    required:  ${adw_enabled}
+    title: "How many OCPS's would you like to Use?"
+    minimum: 1
+    default: 1
+    visible: ${adw_enabled} 
+  ADW_autonomous_database_admin_password:
+    type: password
+    confirmation: true
+    title: "ADW Admin Password"
+    required:  ${adw_enabled}
+    visible: ${adw_enabled} 
+  ADW_autonomous_database_db_name:
+    type: string
+    title: "Database Name"
+    required:  ${adw_enabled}
+    default: "ADWDB"
+    visible: ${adw_enabled} 
+    description: "The name for the Autonomous Database instance. The deployment id (4 characters random string) will be added to the end of the DB name."
+    minLength: 1
+    maxLength: 10
+    pattern: "^[a-zA-Z][a-zA-Z0-9]+$"
+  ADW_autonomous_database_display_name:
+    type: string
+    title: "Database display Name"
+    required:  ${adw_enabled}
+    default: "My ADW DB"
+    visible: ${adw_enabled} 
+  ADW_autonomous_database_db_version:
+    type: oci:database:autonomousdatabaseversion:id
+    title: "DB Version"
+    required:  ${adw_enabled}
+    default: "19c"
+    visible: false
+  ADW_autonomous_database_is_auto_scaling_enabled:
+    type: boolean
+    title: "Turn on Auto Scaling"
+    required:  ${adw_enabled}
+    default: false
+    visible: ${adw_enabled} 
+  ADW_autonomous_database_data_storage_size_in_tbs:
+    type: integer
+    required:  ${adw_enabled}
+    title: "Storage Size in TBs?"
+    minimum: 1
+    default: 1
+    visible: ${adw_enabled} 
+  ADW_autonomous_database_license_model:
+    type: enum
+    title: "license_model"
+    required:  ${adw_enabled}
+    default: "BRING_YOUR_OWN_LICENSE"
+    enum:
+      - BRING_YOUR_OWN_LICENSE
+      - LICENSE_INCLUDED
+    visible: false 
+  ADW_autonomous_database_data_safe_status:
+    type: string
+    title: "database_data_safe_status"
+    required:  ${adw_enabled}
+    default: "NOT_REGISTERED"
+    visible: false 
+  ADW_analytics_instance_capacity_capacity_value:
+    type: integer
+    required: true
+    title: "How many OCPS's would you like to Use?"
+    minimum: 1
+    default: 1
+    visible: ${oac_enabled} 
+  ADW_analytics_instance_name:
+    type: string
+    title: "OAC Instance Name"
+    required:  ${oac_enabled}
+    default: "MyTestOAC"
+    visible: ${oac_enabled}       
+
+  ATP_autonomous_database_cpu_core_count:
+    type: integer
+    required: ${atp_enabled} 
+    title: "How many OCPS's would you like to Use?"
+    minimum: 1
+    default: 1
+    visible: ${atp_enabled}  
+  ATP_autonomous_database_admin_password:
+    type: string
+    title: "ADW Admin Password"
+    required:  ${atp_enabled} 
+    visible: ${atp_enabled}  
+  ATP_autonomous_database_db_name:
+    type: string
+    title: "Database Name"
+    required:  ${atp_enabled} 
+    default: "ADWDB"
+    visible: ${atp_enabled}  
+    description: "The name for the Autonomous Autonomous Transaction Processing instance. The deployment id (4 characters random string) will be added to the end of the DB name."
+    minLength: 1
+    maxLength: 10
+    pattern: "^[a-zA-Z][a-zA-Z0-9]+$"
+  ATP_autonomous_database_display_name:
+    type: string
+    title: "Database display Name"
+    required:  ${atp_enabled} 
+    default: "My ADW DB"
+    visible: ${atp_enabled}  
+  ATP_autonomous_database_db_version:
+    type: string
+    title: "DB Version"
+    required:  ${atp_enabled} 
+    default: "19c"
+    visible: ${atp_enabled} 
+  ATP_autonomous_database_is_auto_scaling_enabled:
+    type: boolean
+    title: "Turn on Auto Scaling"
+    required:  ${atp_enabled} 
+    default: false
+    visible: ${atp_enabled} 
+  ATP_autonomous_database_data_storage_size_in_tbs:
+    type: integer
+    required:  ${atp_enabled} 
+    title: "Storage Size in TBs?"
+    minimum: 1
+    default: 1
+    visible: ${atp_enabled} 
+  ATP_autonomous_database_db_workload:
+    type: string
+    title: "DB Workload"
+    required:  ${atp_enabled} 
+    default: "DW"
+    visible: ${atp_enabled}  
+  ATP_autonomous_database_license_model:
+    type: string
+    title: "license_model"
+    required:  ${atp_enabled} 
+    default: "BRING_YOUR_OWN_LICENSE"
+    enum:
+      - BRING_YOUR_OWN_LICENSE
+      - LICENSE_INCLUDED
+    visible: ${atp_enabled} 
+  ATP_autonomous_database_data_safe_status:
+    type: string
+    title: "database_data_safe_status"
+    required: ${atp_enabled} 
+    default: "NOT_REGISTERED"
+    visible: ${atp_enabled}  
+
+  AJD_autonomous_database_cpu_core_count:
+    type: integer
+    required:  ${ajd_enabled}
+    title: "How many OCPS's would you like to Use?"
+    minimum: 1
+    default: 1
+    visible: ${ajd_enabled} 
+  AJD_autonomous_database_admin_password:
+    type: string
+    title: "ADW Admin Password"
+    required:  ${ajd_enabled}
+    visible: ${ajd_enabled} 
+  AJD_autonomous_database_db_name:
+    type: string
+    title: "Database Name"
+    required:  ${ajd_enabled}
+    default: "ADWDB"
+    visible: ${ajd_enabled} 
+    description: "The name for the Autonomous JSON Database instance. The deployment id (4 characters random string) will be added to the end of the DB name."
+    minLength: 1
+    maxLength: 10
+    pattern: "^[a-zA-Z][a-zA-Z0-9]+$"
+  AJD_autonomous_database_display_name:
+    type: string
+    title: "Database display Name"
+    required:  ${ajd_enabled}
+    default: "My ADW DB"
+    visible: ${ajd_enabled} 
+  AJD_autonomous_database_db_version:
+    type: string
+    title: "DB Version"
+    required:  ${ajd_enabled}
+    default: "19c"
+    visible: ${ajd_enabled}
+  AJD_autonomous_database_is_auto_scaling_enabled:
+    type: boolean
+    title: "Turn on Auto Scaling"
+    required: ${ajd_enabled}
+    default: false
+    visible: ${ajd_enabled} 
+  AJD_autonomous_database_data_storage_size_in_tbs:
+    type: integer
+    required: ${ajd_enabled}
+    title: "Storage Size in TBs?"
+    minimum: 1
+    default: 1
+    visible: ${ajd_enabled} 
+  AJD_autonomous_database_db_workload:
+    type: string
+    title: "DB Workload"
+    required:  ${ajd_enabled}
+    default: "DW"
+    visible: ${ajd_enabled} 
+  AJD_autonomous_database_data_safe_status:
+    type: string
+    title: "database_data_safe_status"
+    required:  ${ajd_enabled}
+    default: "NOT_REGISTERED"
+    visible: ${ajd_enabled} 
+  
+  database_admin_password:
+    type: string
+    title: "database_data_safe_status"
+    required:  ${dbas_enabled}
+    default: "NOT_REGISTERED"
+    visible: ${dbas_enabled}
+  database_db_unique_name:
+    type: string
+    title: "database_data_safe_status"
+    required: ${dbas_enabled}
+    default: "NOT_REGISTERED"
+    visible: ${dbas_enabled}
+  database_db_workload:
+    type: string
+    title: "database_data_safe_status"
+    required:  ${dbas_enabled}
+    default: "NOT_REGISTERED"
+    visible: ${dbas_enabled}
+  database_pdb_name:
+    type: string
+    title: "database_data_safe_status"
+    required:  ${dbas_enabled}
+    default: "NOT_REGISTERED"
+    visible: ${dbas_enabled}
+  database_version:
+    type: string
+    title: "database_data_safe_status"
+    required: ${dbas_enabled}
+    default: "NOT_REGISTERED"
+    visible: ${dbas_enabled}
+  database_shape:
+    type: string
+    title: "database_data_safe_status"
+    required: ${dbas_enabled}
+    default: "NOT_REGISTERED"
+    visible: ${dbas_enabled}
+  database_storage:
+    type: string
+    title: "database_data_safe_status"
+    required:  ${dbas_enabled}
+    default: "NOT_REGISTERED"
+    visible: ${dbas_enabled}
+  database_edition:
+    type: string
+    title: "database_data_safe_status"
+    required:  ${dbas_enabled}
+    default: "NOT_REGISTERED"
+    visible: ${dbas_enabled}
+  database_nodecount:
+    type: string
+    title: "database_data_safe_status"
+    required: ${dbas_enabled}
+    default: "NOT_REGISTERED"
+    visible: ${dbas_enabled}
+  database_hostname:
+    type: string
+    title: "database_data_safe_status"
+    required:  ${dbas_enabled}
+    default: "NOT_REGISTERED"
+    visible: ${dbas_enabled}
+  database_display_name:
+    type: string
+    title: "database_data_safe_status"
+    required:  ${dbas_enabled}
+    default: "NOT_REGISTERED"
+    visible: ${dbas_enabled}
+
+  oac_name:
+    type: integer
+    required: ${oac_enabled}
+    title: "How many OCPS's would you like to Use?"
+    minimum: 1
+    default: 1
+    visible: ${oac_enabled} 
+  oac_description:
+    type: string
+    title: "OAC Instance Name"
+    required:  ${oac_enabled}
+    default: "MyTestOAC"
+    visible: ${oac_enabled} 
+  oac_capacity_type:
+    type: string
+    title: "IDS Access Token"
+    required:  ${oac_enabled}
+    visible: ${oac_enabled}
+  oac_capacity_value:
+    type: string
+    title: "OAC Instance Name"
+    required:  ${oac_enabled}
+    default: "MyTestOAC"
+    visible: ${oac_enabled} 
+  oac_capacity_value_prod:
+    type: string
+    title: "OAC Instance Name"
+    required:  ${oac_enabled}
+    default: "MyTestOAC"
+    visible: ${oac_enabled} 
+  oac_feature_set:
+    type: string
+    title: "OAC Instance Name"
+    required:  ${oac_enabled}
+    default: "MyTestOAC"
+    visible: ${oac_enabled} 
+  oac_license_type:
+    type: string
+    title: "OAC Instance Name"
+    required:  ${oac_enabled}
+    default: "MyTestOAC"
+    visible: ${oac_enabled} 
+  oac_idcs_token:
+    type: string
+    title: "OAC Instance Name"
+    required:  ${oac_enabled}
+    default: "MyTestOAC"
+    visible: ${oac_enabled} 
+
+  obs_name:
+    type: string
+    title: "OAC Instance Name"
+    required:  ${obs_enabled}
+    default: "MyTestOAC"
+    visible: ${obs_enabled} 
+  namespace:
+    type: string
+    title: "OAC Instance Name"
+    required:  ${obs_enabled}
+    default: "MyTestOAC"
+    visible: ${obs_enabled} 
+  bucket_access_type:
+    type: string
+    title: "OAC Instance Name"
+    required:  ${obs_enabled}
+    default: "MyTestOAC"
+    visible: ${obs_enabled} 
