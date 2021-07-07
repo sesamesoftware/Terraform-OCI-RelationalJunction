@@ -58,7 +58,6 @@ resource "oci_core_instance" "rj_instance" {
   }
   display_name                        = var.rj_instance_name
   fault_domain                        = "FAULT-DOMAIN-1"
-  freeform_tags                       = var.tags
   is_pv_encryption_in_transit_enabled = false
 
   metadata = {

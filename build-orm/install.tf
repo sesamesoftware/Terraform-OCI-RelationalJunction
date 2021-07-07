@@ -27,6 +27,9 @@ data "archive_file" "generate_zip" {
                 "diagram",
                 "envVar.sh",
                 "schema.yamlexample",
-                "terraform.tfvarsexample"
+                "terraform.tfvarsexample",
+                ".terraform.lock.hcl",
+                "env-vars.ps1",
+                "terraform.tfvars.example"
                 ]
 }

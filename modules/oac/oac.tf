@@ -11,7 +11,6 @@ resource "oci_analytics_analytics_instance" "analytics_instance" {
   name           = var.oac_name
 
   #Optional
-  description       = var.oac_description
   idcs_access_token = var.oac_idcs_token
   # network_endpoint_details {
   #Required

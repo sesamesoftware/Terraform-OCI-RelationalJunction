@@ -8,10 +8,6 @@ variable "oac_name" {
   type        = string
   description = "provide value of OAC Name"
 }
-variable "oac_description" {
-  type        = string
-  description = "provide value of OAC Description"
-}
 
 variable "oac_capacity_type" {
   type        = string

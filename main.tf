@@ -4,11 +4,11 @@ Local Variables
 locals {
   public_subnet_id  = var.vcn_use_existing ? var.subnet_public_existing : module.vcn.public-subnetid
   private_subnet_id = var.vcn_use_existing ? var.subnet_private_existing : module.vcn.private-subnetid
-  }
+}
 /* Virtual Cloud Network  */
 module "vcn" {
   source                     = "./modules/networking"
-  compartment_ocid           = var.compartment_ocid
+  compartment_ocid           = var.vcn_compartment_ocid != "" ? var.vcn_compartment_ocid : var.compartment_ocid
   subnet_public_displayname  = var.subnet_public_displayname
   subnet_public_cidr         = var.subnet_public_cidr
   subnet_private_displayname = var.subnet_private_displayname
@@ -83,7 +83,7 @@ module "ajd" {
 }
 // Database
 
-module "DBAS" {
+module "dbas" {
   source                  = "./modules/Databases/dbas"
   count                   = var.dbas_enabled == true ? 1 : 0
   depends_on              = [module.vcn]
@@ -92,7 +92,7 @@ module "DBAS" {
   ad_number               = var.ad_number
   database_admin_password = var.database_admin_password
   database_db_unique_name = var.database_db_unique_name
-  database_db_workload    = var.database_db_workload
+  database_db_workload    = "OLTP"
   database_pdb_name       = var.database_pdb_name
   database_version        = var.database_version
   database_shape          = var.database_shape
@@ -115,12 +115,10 @@ module "rj" {
   depends_on       = [module.vcn, module.adw]
   rj_shape         = var.rj_shape
   rj_instance_name = var.rj_instance_name
-  tags             = var.tags
   subnet_id        = local.public_subnet_id
   ssh_public_key   = var.ssh_public_key
   region           = var.region
   tenancy_ocid     = var.tenancy_ocid
-  instance_shape_config_memory_in_gbs=var.instance_shape_config_memory_in_gbs
 }
 
 
@@ -138,14 +136,19 @@ module "oac" {
   oac_license_type   = var.oac_license_type
   oac_idcs_token     = var.oac_idcs_token
   oac_name           = var.oac_name
-  oac_description    = var.oac_description
 }
 
-module "OBS" {
-  source             = "./modules/ObjectStorage"
+module "obs" {
+  source             = "./modules/objectStorage"
   count              = var.obs_enabled == true ? 1 : 0
   obs_name           = var.obs_name
   namespace          = var.namespace
   compartment_ocid   = var.compartment_ocid
   bucket_access_type = var.bucket_access_type
 }
+
+output "RJ_URL" {
+  description = "url to connect to Relational Junction"
+  value       = module.rj.RJ_URL
+}
+
