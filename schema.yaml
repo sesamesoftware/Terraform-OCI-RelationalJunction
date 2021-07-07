@@ -631,7 +631,7 @@ variables:
     visible: ${dbas_enabled}
   database_shape:
     type: oci:core:instanceshape:name
-    title: "Select a shape for the database instances"
+    title: "Select a shape for the Database Instance"
     description: "A shape is a template that determines the number of CPUs, amount of memory, and other resources allocated to a newly created instance."   
     dependsOn:
       compartmentId: compartment_ocid
