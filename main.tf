@@ -119,6 +119,7 @@ module "rj" {
   ssh_public_key   = var.ssh_public_key
   region           = var.region
   tenancy_ocid     = var.tenancy_ocid
+  rj_type          = var.rj_type
 }
 
 
